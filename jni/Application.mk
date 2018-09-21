@@ -1,0 +1,11 @@
+#APP_PROJECT_PATH=
+APP_OPTIM=debug
+APP_BUILD_SCRIPT=
+APP_ABI=armeabi-v7a
+APP_PLATFORM=android-18
+NDK_TOOLCHAIN_VERSION=clang
+#NDK_TOOLCHAIN_VERSION=4.9
+#APP_PIE=true
+APP_CFLAGS=-fexceptions 
+#APP_CFLAGS+=c++_shared 
+APP_STL=c++_static
