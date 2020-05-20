@@ -1,0 +1,72 @@
+cc_defaults {
+   name: "ffmpeg_lib",
+   vendor_available: true,
+    vndk: {
+        enabled: true,
+    },
+}
+
+
+cc_prebuilt_library_shared {
+    name: "libavcodec",
+    defaults: ["ffmpeg_lib"],
+    strip: {
+      none:true,
+    },
+    target: {
+       android_arm: {
+            srcs: ["android/cortex-a53/lib/libavcodec.so"],
+       },
+       android_arm64: {
+            srcs: ["android/cortex-a53/lib/libavcodec.so"],
+       }
+    },
+}
+
+cc_prebuilt_library_shared {
+    name: "libavformat",
+    defaults: ["ffmpeg_lib"],
+    strip: {
+      none:true,
+    },
+    target: {
+       android_arm: {
+            srcs: ["android/cortex-a53/lib/libavformat.so"],
+       },
+       android_arm64: {
+            srcs: ["android/cortex-a53/lib/libavformat.so"],
+       }
+    },
+}
+
+cc_prebuilt_library_shared {
+    name: "libavutil",
+    defaults: ["ffmpeg_lib"],
+    strip: {
+      none:true,
+    },
+    target: {
+       android_arm: {
+            srcs: ["android/cortex-a53/lib/libavutil.so"],
+       },
+       android_arm64: {
+            srcs: ["android/cortex-a53/lib/libavutil.so"],
+       }
+    },
+}
+
+cc_prebuilt_library_shared {
+    name: "libswresample",
+    defaults: ["ffmpeg_lib"],
+    strip: {
+      none:true,
+    },
+    target: {
+       android_arm: {
+            srcs: ["android/cortex-a53/lib/libswresample.so"],
+       },
+       android_arm64: {
+            srcs: ["android/cortex-a53/lib/libswresample.so"],
+       }
+    },
+}

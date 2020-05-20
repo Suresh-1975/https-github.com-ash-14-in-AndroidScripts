@@ -1,0 +1,1036 @@
+AVSSDK_SRC_PATH = ["avs-lib/src"]
+AVSSDK_INC_PATH = ["avs-lib/include"]
+
+AVSAPP_SRC_PATH = ["AvsApp/src/"]
+AVSAPP_INC_PATH = ["AvsApp/include"]
+
+cc_defaults {
+    name: "avs_common_flags",
+    //vendor_available: true,
+    //vndk: {
+    //    enabled: true,
+    //},
+
+    cppflags: [
+       "-DKWD",
+       "-DKWD_AMAZONLITE",
+       "-DAMAZONLITE_KEY_WORD_DETECTOR",
+       "-Wall",
+       "-DANDROID",
+       "-DA4B",
+       "-DENABLE_PCC",
+       "-DENABLE_MCC",
+       "-DDEBUG",
+       "-DRAPIDJSON_HAS_STDSTRING",
+       "-DACSDK_DEBUG_LOG_ENABLED",
+       "-target",
+       "-armv7a-none-linux-androideabi",
+       "-Wno-unused-parameter",
+       "-fexceptions",
+       "-Wno-ignored-qualifiers",
+       "-Wno-non-virtual-dtor",
+    ],
+    gnu_extensions: false,
+    include_dirs: [
+       "frameworks/wilhelm/include",
+    ],
+
+    local_include_dirs: [
+       "avs-lib/include",
+       "avs-lib/include/Storage/SQLiteStorage/include",
+       "avs-lib/include/CapabilitiesDelegate/include",
+       "avs-lib/include/CapabilityAgents/Settings/include",
+       "avs-lib/include/CapabilityAgents/ExternalMediaPlayer/include",
+       "avs-lib/include/CapabilityAgents/AudioPlayer/include",
+       "avs-lib/include/CapabilityAgents/Notifications/include",
+       "avs-lib/include/CapabilityAgents/System/include",
+       "avs-lib/include/CapabilityAgents/PhoneCallController/include",
+       "avs-lib/include/CapabilityAgents/Equalizer/include",
+       "avs-lib/include/CapabilityAgents/Alerts/include",
+       "avs-lib/include/CapabilityAgents/MRM/include",
+       "avs-lib/include/CapabilityAgents/PlaybackController/include",
+       "avs-lib/include/CapabilityAgents/AIP/include",
+       "avs-lib/include/CapabilityAgents/SpeechSynthesizer/include",
+       "avs-lib/include/CapabilityAgents/TemplateRuntime/include",
+       "avs-lib/include/CapabilityAgents/SpeakerManager/include",
+       "avs-lib/include/CapabilityAgents/InteractionModel/include",
+       "avs-lib/include/CapabilityAgents/DoNotDisturb/include",
+       "avs-lib/include/CapabilityAgents/MeetingClientController/include",
+       "avs-lib/include/CapabilityAgents/DoNotDisturb/include",
+       "avs-lib/include/PlaylistParser/include",
+       "avs-lib/include/KWD/include",
+       "avs-lib/include/KWD/AmazonLite/include",
+       "avs-lib/include/KWD/KWDProvider/include",
+       "avs-lib/include/ESP/include",
+       "avs-lib/include/RegistrationManager/include",
+       "avs-lib/include/CertifiedSender/include",
+       "avs-lib/include/MediaPlayer/AndroidSLESMediaPlayer/include",
+       "avs-lib/include/ApplicationUtilities/Resources/Audio/include",
+       "avs-lib/include/ApplicationUtilities/DefaultClient/include",
+       "avs-lib/include/ApplicationUtilities/AndroidUtilities/include",
+       "avs-lib/include/EqualizerImplementations/include",
+       "avs-lib/include/ContextManager/include",
+       "avs-lib/include/Amazon-WWD/include",
+       "avs-lib/include/ThirdParty",
+       "avs-lib/include/SpeechEncoder/include",
+       "avs-lib/include/Settings/include",
+       "avs-lib/include/Authorization",
+    ],
+    compile_multilib: "32"
+    //stl: "c++_shared",
+}
+
+cc_prebuilt_library_static {
+    name: "libpryon_lite",
+    strip: {
+      none:true,
+    },
+    target: {
+       android_arm: {
+            srcs: ["avs-lib/src/Amazon-WWD/lib/armeabi-v7a/libpryon_lite.a"],
+       },
+       android_arm64: {
+            srcs: ["avs-lib/src/Amazon-WWD/lib/armeabi-v7a/libpryon_lite.a"],
+       }
+    },
+}
+
+
+
+//libAVSCommon.so
+cc_library_shared {
+    cppflags: ["-DACSDK_LOG_MODULE=avsCommon"],
+    //conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    name: "libAVSCommon",
+    tags: ["eng"],
+    shared_libs: ["libcurl"],
+    srcs: [
+        "avs-lib/src/AVSCommon/AVS/src/AbstractAVSConnectionManager.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/AlexaClientSDKInit.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/AVSDirective.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/AVSMessage.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/AVSMessageHeader.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/CapabilityAgent.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/CapabilityConfiguration.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/DialogUXStateAggregator.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/EventBuilder.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/ExceptionEncounteredSender.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/HandlerAndPolicy.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/BlockingPolicy.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/MessageRequest.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/NamespaceAndName.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/Attachment/Attachment.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/Attachment/AttachmentManager.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/Attachment/AttachmentUtils.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/Attachment/InProcessAttachment.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/Attachment/InProcessAttachmentReader.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/Attachment/InProcessAttachmentWriter.cpp",
+        "avs-lib/src/AVSCommon/AVS/src/ExternalMediaPlayer/AdapterUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/DeviceInfo.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Executor.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/FileUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/FormattedAudioStreamAdapter.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/JSON/JSONUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/JSON/JSONGenerator.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/MacAddressString.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Metrics.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/RequiresShutdown.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/RetryTimer.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/SafeCTimeAccess.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Stopwatch.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/StringUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/TaskThread.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/TimePoint.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Timer.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/TimeUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/UUIDGeneration.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Configuration/ConfigurationNode.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/HTTP2/HTTP2GetMimeHeadersResult.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/HTTP2/HTTP2MimeRequestEncoder.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/HTTP2/HTTP2MimeResponseDecoder.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/HTTP2/HTTP2SendDataResult.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/CallbackData.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/CurlEasyHandleWrapper.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/CurlMultiHandleWrapper.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/HTTPContentFetcherFactory.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/HttpPost.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/HttpPut.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/HTTPResponse.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/LibcurlHTTP2Connection.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/LibcurlHTTP2ConnectionFactory.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/LibcurlHTTP2Request.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/LibCurlHttpContentFetcher.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/LibcurlUtils/LibcurlUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/ConsoleLogger.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/Level.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/LogEntryBuffer.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/LogEntry.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/LogEntryStream.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/Logger.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/LoggerSinkManager.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/LoggerUtils.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/LogStringFormatter.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/ModuleLogger.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Logger/ThreadMoniker.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Network/InternetConnectionMonitor.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Stream/Streambuf.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Stream/StreamFunctions.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/BluetoothEventBus.cpp",
+        "avs-lib/src/AVSCommon/Utils/src/Bluetooth/SDPRecords.cpp",
+    ],
+
+}
+
+//libACL.so
+cc_library_shared {
+
+    cppflags: ["-DACSDK_LOG_MODULE=acl"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+      "libAVSCommon",
+      "libcurl",
+    ],
+    tags: ["eng"],
+    name: "libACL",
+    srcs: [
+        "avs-lib/src/ACL/src/AVSConnectionManager.cpp",
+        "avs-lib/src/ACL/src/Transport/DownchannelHandler.cpp",
+        "avs-lib/src/ACL/src/Transport/ExchangeHandler.cpp",
+        "avs-lib/src/ACL/src/Transport/HTTP2Transport.cpp",
+        "avs-lib/src/ACL/src/Transport/HTTP2TransportFactory.cpp",
+        "avs-lib/src/ACL/src/Transport/MessageRequestHandler.cpp",
+        "avs-lib/src/ACL/src/Transport/MessageRouter.cpp",
+        "avs-lib/src/ACL/src/Transport/MimeResponseSink.cpp",
+        "avs-lib/src/ACL/src/Transport/PingHandler.cpp",
+        "avs-lib/src/ACL/src/Transport/PostConnectSynchronizer.cpp",
+        "avs-lib/src/ACL/src/Transport/PostConnectSynchronizerFactory.cpp",
+        "avs-lib/src/ACL/src/Transport/TransportDefines.cpp",
+    ],
+}
+
+//libADSL.so
+cc_library_shared {
+
+    cppflags: ["-DACSDK_LOG_MODULE=adsl"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libADSL",
+
+    srcs: [
+        "avs-lib/src/ADSL/src/DirectiveProcessor.cpp",
+        "avs-lib/src/ADSL/src/DirectiveRouter.cpp",
+        "avs-lib/src/ADSL/src/DirectiveSequencer.cpp",
+        "avs-lib/src/ADSL/src/MessageInterpreter.cpp",
+    ],
+
+}
+
+//libAFML.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=afml"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libAFML",
+
+    srcs: [
+        "avs-lib/src/AFML/src/AudioActivityTracker.cpp",
+        "avs-lib/src/AFML/src/Channel.cpp",
+        "avs-lib/src/AFML/src/FocusManager.cpp",
+        "avs-lib/src/AFML/src/VisualActivityTracker.cpp",
+    ],
+
+}
+
+//libAndroidUtilities.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=androidUtilities"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "liblog",
+        "libOpenSLES",
+    ],
+    tags: ["eng"],
+    name: "libAndroidUtilities",
+
+    srcs: [
+        "avs-lib/src/ApplicationUtilities/AndroidUtilities/src/AndroidLogger.cpp",
+        "avs-lib/src/ApplicationUtilities/AndroidUtilities/src/AndroidSLESBufferQueue.cpp",
+        "avs-lib/src/ApplicationUtilities/AndroidUtilities/src/AndroidSLESEngine.cpp",
+        "avs-lib/src/ApplicationUtilities/AndroidUtilities/src/AndroidSLESMicrophone.cpp",
+        "avs-lib/src/ApplicationUtilities/AndroidUtilities/src/AndroidSLESObject.cpp",
+    ],
+
+}
+
+//libAudioResources.so
+cc_library_shared {
+
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libAudioResources",
+
+    srcs: [
+        "avs-lib/src/ApplicationUtilities/Resources/Audio/src/AlertsAudioFactory.cpp",
+        "avs-lib/src/ApplicationUtilities/Resources/Audio/src/AudioFactory.cpp",
+        "avs-lib/src/ApplicationUtilities/Resources/Audio/src/CommunicationsAudioFactory.cpp",
+        "avs-lib/src/ApplicationUtilities/Resources/Audio/src/NotificationsAudioFactory.cpp",
+    ],
+
+}
+
+//libPlaylistParser.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=PlaylistParser"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+      "libAVSCommon",
+      "libcurl",
+      "libcrypto",
+    ],
+    tags: ["eng"],
+    name: "libPlaylistParser",
+
+    srcs: [
+        "avs-lib/src/PlaylistParser/src/IterativePlaylistParser.cpp",
+        "avs-lib/src/PlaylistParser/src/PlaylistParser.cpp",
+        "avs-lib/src/PlaylistParser/src/PlaylistUtils.cpp",
+        "avs-lib/src/PlaylistParser/src/ContentDecrypter.cpp",
+        "avs-lib/src/PlaylistParser/src/FFMpegInputBuffer.cpp",
+        "avs-lib/src/PlaylistParser/src/M3UParser.cpp",
+        "avs-lib/src/PlaylistParser/src/UrlContentToAttachmentConverter.cpp",
+    ],
+
+}
+
+//libRegistrationManager.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=registrationManager"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libRegistrationManager",
+
+    srcs: [
+        "avs-lib/src/RegistrationManager/src/CustomerDataManager.cpp",
+        "avs-lib/src/RegistrationManager/src/RegistrationManager.cpp",
+        "avs-lib/src/RegistrationManager/src/CustomerDataHandler.cpp",
+    ],
+
+}
+
+//libSQLiteStorage.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=sqliteStorage"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+      "libAVSCommon",
+      "libsqlite",
+    ],
+
+    tags: ["eng"],
+    name: "libSQLiteStorage",
+
+    srcs: [
+        "avs-lib/src/Storage/SQLiteStorage/src/SQLiteDatabase.cpp",
+        "avs-lib/src/Storage/SQLiteStorage/src/SQLiteMiscStorage.cpp",
+        "avs-lib/src/Storage/SQLiteStorage/src/SQLiteStatement.cpp",
+        "avs-lib/src/Storage/SQLiteStorage/src/SQLiteUtils.cpp",
+    ],
+
+}
+
+//libKWD.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=abstractKeywordDetector"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libKWD",
+
+    srcs: ["avs-lib/src/KWD/src/AbstractKeywordDetector.cpp"],
+
+}
+
+//libAMAZONLITE.so
+cc_library_shared {
+    cppflags:
+    [
+       "-DACSDK_LOG_MODULE=pryonLiteKeywordDetector",
+       "-DKWD_AMAZONLITE_DYNAMIC_MODEL_LOADING",
+       "-DAMAZONLITE_USE_EMBEDDED_MODEL",
+    ],
+
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libKWD",
+    ],
+    static_libs: [
+        "libpryon_lite",
+    ],
+
+    tags: ["eng"],
+    name: "libAMAZONLITE",
+
+    srcs: [
+      "avs-lib/src/KWD/AmazonLite/src/PryonLiteKeywordDetector.cpp",
+      "avs-lib/src/Amazon-WWD/models/D.en-US.alexa.cpp",
+    ],
+
+
+}
+
+//libKeywordDetectorProvider.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=abstractKeywordDetector"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAMAZONLITE",
+        "libAVSCommon",
+    ],
+    tags: ["eng"],
+    name: "libKeywordDetectorProvider",
+
+    srcs: ["avs-lib/src/KWD/KWDProvider/src/KeywordDetectorProvider.cpp"],
+
+}
+
+//libCBLAuthDelegate.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=cblAuthDelegate"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libSQLiteStorage",
+        "libRegistrationManager",
+    ],
+    tags: ["eng"],
+    name: "libCBLAuthDelegate",
+
+    srcs: [
+        "avs-lib/src/Authorization/CBLAuthDelegate/src/CBLAuthDelegateConfiguration.cpp",
+        "avs-lib/src/Authorization/CBLAuthDelegate/src/CBLAuthDelegate.cpp",
+        "avs-lib/src/Authorization/CBLAuthDelegate/src/SQLiteCBLAuthDelegateStorage.cpp",
+    ],
+
+}
+
+//libCapabilitiesDelegate.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=capabilitiesDelegate"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libACL",
+        "libRegistrationManager",
+    ],
+    tags: ["eng"],
+    name: "libCapabilitiesDelegate",
+    srcs: ["avs-lib/src/CapabilitiesDelegate/src/CapabilitiesDelegate.cpp"],
+
+}
+
+//libAIP.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=aip"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libADSL",
+        "libAFML",
+        "libspeechEncoder",
+    ],
+    tags: ["eng"],
+    name: "libAIP",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/AIP/src/AudioInputProcessor.cpp",
+        "avs-lib/src/CapabilityAgents/AIP/src/ESPData.cpp",
+    ],
+
+}
+
+//libAudioPlayer.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=audioplayer"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libAudioPlayer",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/AudioPlayer/src/AudioPlayer.cpp",
+        "avs-lib/src/CapabilityAgents/AudioPlayer/src/ProgressTimer.cpp",
+    ],
+
+}
+
+//libAlerts.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=alerts"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libAudioResources",
+        "libCertifiedSender",
+        "libSQLiteStorage",
+        "libRegistrationManager",
+    ],
+    tags: ["eng"],
+    name: "libAlerts",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/Alerts/src/Alarm.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/Alert.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/AlertsCapabilityAgent.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/AlertScheduler.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/Reminder.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/Timer.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/Renderer/Renderer.cpp",
+        "avs-lib/src/CapabilityAgents/Alerts/src/Storage/SQLiteAlertStorage.cpp",
+    ],
+
+}
+
+//libEqualizerImplementations.so
+// ANDROIDMK TRANSLATION ERROR: unsupported conditional
+// ifeq ($(ENABLE_EQUALIZER), true)
+
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=equalizer"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libEqualizerImplementations",
+
+    srcs: [
+        "avs-lib/src/EqualizerImplementations/src/EqualizerController.cpp",
+        "avs-lib/src/EqualizerImplementations/src/EqualizerLinearBandMapper.cpp",
+        "avs-lib/src/EqualizerImplementations/src/EqualizerUtils.cpp",
+        "avs-lib/src/EqualizerImplementations/src/InMemoryEqualizerConfiguration.cpp",
+        "avs-lib/src/EqualizerImplementations/src/MiscDBEqualizerStorage.cpp",
+        "avs-lib/src/EqualizerImplementations/src/SDKConfigEqualizerConfiguration.cpp",
+    ],
+
+}
+
+//libEqualizer.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=equalizer"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libRegistrationManager",
+        "libEqualizerImplementations",
+    ],
+    tags: ["eng"],
+    name: "libEqualizer",
+
+    srcs: ["avs-lib/src/CapabilityAgents/Equalizer/src/EqualizerCapabilityAgent.cpp"],
+
+}
+
+//libExternalMediaPlayer.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=ExternalMediaPlayer"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libExternalMediaPlayer",
+
+    srcs: ["avs-lib/src/CapabilityAgents/ExternalMediaPlayer/src/ExternalMediaPlayer.cpp"],
+}
+
+//libSpeechEncoder.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=speechEncoder"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libspeechEncoder",
+
+    srcs: ["avs-lib/src/SpeechEncoder/src/SpeechEncoder.cpp"]
+}
+
+//libDeviceSettings.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=settings"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libCertifiedSender",
+        "libSQLiteStorage",
+    ],
+    tags: ["eng"],
+    name: "libDeviceSettings",
+
+    srcs: ["avs-lib/src/Settings/src/Storage/SQLiteDeviceSettingStorage.cpp"],
+
+}
+
+//libDoNotDisturbCA
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=doNoDisturbCA"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libRegistrationManager",
+        "libDeviceSettings",
+    ],
+    tags: ["eng"],
+    name: "libDoNotDisturbCA",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/DoNotDisturb/src/DNDMessageRequest.cpp",
+        "avs-lib/src/CapabilityAgents/DoNotDisturb/src/DNDSettingProtocol.cpp",
+        "avs-lib/src/CapabilityAgents/DoNotDisturb/src/DoNotDisturbCapabilityAgent.cpp",
+    ],
+
+}
+
+//libInteractionModel.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=interactionModel"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libInteractionModel",
+
+    srcs: ["avs-lib/src/CapabilityAgents/InteractionModel/src/InteractionModelCapabilityAgent.cpp"],
+}
+
+//libMRM.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=mrm"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+       "libAVSCommon",
+    ],
+
+    tags: ["eng"],
+    name: "libMRM",
+
+    srcs: ["avs-lib/src/CapabilityAgents/MRM/src/MRMCapabilityAgent.cpp"],
+}
+
+//libNotifications.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=Notifications"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libAudioResources",
+        "libSQLiteStorage",
+        "libRegistrationManager",
+    ],
+    tags: ["eng"],
+    name: "libNotifications",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/Notifications/src/NotificationIndicator.cpp",
+        "avs-lib/src/CapabilityAgents/Notifications/src/NotificationRenderer.cpp",
+        "avs-lib/src/CapabilityAgents/Notifications/src/NotificationsCapabilityAgent.cpp",
+        "avs-lib/src/CapabilityAgents/Notifications/src/SQLiteNotificationsStorage.cpp",
+    ],
+}
+
+//libPhoneCallController.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=PhoneCallController"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libContextManager",
+    ],
+    tags: ["eng"],
+    name: "libPhoneCallController",
+
+    srcs: ["avs-lib/src/CapabilityAgents/PhoneCallController/src/PhoneCallController.cpp"],
+}
+
+//libPlaybackController.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=playbackcontroller"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libContextManager",
+    ],
+    tags: ["eng"],
+    name: "libPlaybackController",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/PlaybackController/src/PlaybackCommand.cpp",
+        "avs-lib/src/CapabilityAgents/PlaybackController/src/PlaybackController.cpp",
+        "avs-lib/src/CapabilityAgents/PlaybackController/src/PlaybackMessageRequest.cpp",
+        "avs-lib/src/CapabilityAgents/PlaybackController/src/PlaybackRouter.cpp",
+    ],
+
+}
+
+//libAVSSettings.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=settings"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libSQLiteStorage",
+        "libCertifiedSender",
+        "libRegistrationManager",
+    ],
+    tags: ["eng"],
+    name: "libAVSSettings",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/Settings/src/Settings.cpp",
+        "avs-lib/src/CapabilityAgents/Settings/src/SettingsUpdatedEventSender.cpp",
+        "avs-lib/src/CapabilityAgents/Settings/src/SQLiteSettingStorage.cpp",
+    ],
+
+}
+
+//libSpeakerManager.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=speakerManager"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libSpeakerManager",
+
+    srcs: ["avs-lib/src/CapabilityAgents/SpeakerManager/src/SpeakerManager.cpp"],
+}
+
+//libSpeechSynthesizer.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=speechSynthesizer"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libSpeechSynthesizer",
+
+    srcs: ["avs-lib/src/CapabilityAgents/SpeechSynthesizer/src/SpeechSynthesizer.cpp"],
+}
+
+//libAVSSystem.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=system"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libACL",
+    ],
+    tags: ["eng"],
+    name: "libAVSSystem",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/System/src/EndpointHandler.cpp",
+        "avs-lib/src/CapabilityAgents/System/src/RevokeAuthorizationHandler.cpp",
+        "avs-lib/src/CapabilityAgents/System/src/SoftwareInfoSender.cpp",
+        "avs-lib/src/CapabilityAgents/System/src/SoftwareInfoSendRequest.cpp",
+        "avs-lib/src/CapabilityAgents/System/src/SystemCapabilityProvider.cpp",
+        "avs-lib/src/CapabilityAgents/System/src/UserInactivityMonitor.cpp",
+    ],
+
+}
+
+//libTemplateRuntime.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=templateRuntime"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libTemplateRuntime",
+
+    srcs: [
+        "avs-lib/src/CapabilityAgents/TemplateRuntime/src/TemplateRuntime.cpp"
+    ],
+}
+
+//libCertifiedSender.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=certifiedSender"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libRegistrationManager",
+        "libSQLiteStorage",
+    ],
+    tags: ["eng"],
+    name: "libCertifiedSender",
+
+    srcs: [
+        "avs-lib/src/CertifiedSender/src/CertifiedSender.cpp",
+        "avs-lib/src/CertifiedSender/src/SQLiteMessageStorage.cpp",
+    ],
+}
+
+//libcontextManager.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=contextManager"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: ["libAVSCommon"],
+    tags: ["eng"],
+    name: "libContextManager",
+
+    srcs: [
+        "avs-lib/src/ContextManager/src/ContextManager.cpp"
+    ],
+}
+
+//libESP.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=esp"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libAIP",
+    ],
+    tags: ["eng"],
+    name: "libESP",
+
+    srcs: [
+        "avs-lib/src/ESP/src/DummyESPDataProvider.cpp",
+    ],
+}
+
+//libAndroidSLESMediaPlayer.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=androidSLESMediaPlayer"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libAndroidUtilities",
+        "libPlaylistParser",
+        "libavcodec",
+        "libavutil",
+        "libavformat",
+        "libswresample",
+        "libssl",
+        "libcrypto",
+        "liblog",
+        "libOpenSLES",
+    ],
+    cflags: [
+     "-external/ffmpeg/android/cortex-a53/include",
+    ],
+    tags: ["eng"],
+    name: "libAndroidSLESMediaPlayer",
+    //host_ldlibs: [
+    //  "-lavcodec",
+    //  "-lswresample",
+    //  "-lavformat",
+    //  "-lavutil",
+   // ],
+
+    srcs: [
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/AndroidSLESMediaPlayer.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/AndroidSLESMediaQueue.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/AndroidSLESSpeaker.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/FFmpegAttachmentInputController.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/FFmpegDecoder.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/FFmpegDeleter.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/FFmpegStreamInputController.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/FFmpegUrlInputController.cpp",
+        "avs-lib/src/MediaPlayer/AndroidSLESMediaPlayer/src/PlaybackConfiguration.cpp",
+    ],
+
+}
+
+//libDefaultClient.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=defaultClient"] + ["-DENABLE_REVOKE_AUTH"],
+
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    name: "libDefaultClient",
+    tags: ["eng"],
+    shared_libs: [
+        "libAVSCommon",
+        "libACL",
+        "libADSL",
+        "libAFML",
+        "libAIP",
+        "libAlerts",
+        "libAudioPlayer",
+        "libAVSSystem",
+        "libContextManager",
+        "libExternalMediaPlayer",
+        "libInteractionModel",
+        "libNotifications",
+        "libPlaybackController",
+        "libRegistrationManager",
+        "libSpeakerManager",
+        "libSpeechSynthesizer",
+        "libAVSSettings",
+        "libTemplateRuntime",
+        "libPhoneCallController",
+        "libCertifiedSender",
+        "libDeviceSettings",
+        "libDoNotDisturbCA",
+        "libMeetingClientController",
+    ],
+
+    srcs: [
+        "avs-lib/src/ApplicationUtilities/DefaultClient/src/DefaultClient.cpp"
+    ],
+}
+
+//libMeetingClientController.so
+cc_library_shared {
+
+    cppflags:  ["-DACSDK_LOG_MODULE=MeetingClientController"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    shared_libs: [
+        "libAVSCommon",
+        "libContextManager",
+    ],
+    tags: ["eng"],
+
+    name: "libMeetingClientController",
+
+    srcs: [
+       "avs-lib/src/CapabilityAgents/MeetingClientController/MeetingClientController.cpp"
+    ],
+}
+
+//Building Application
+cc_binary {
+
+    cppflags:
+    [
+         "-DACSDK_LOG_MODULE=AlexaClientApp",
+         "-DENABLE_REVOKE_AUTH",
+         "-DANDROID_MEDIA_PLAYER",
+         "-DANDROID_MICROPHONE",
+         "-DANDROID_LOGGER",
+    ],
+    local_include_dirs: ["AvsApp/include"],
+    conlyflags: ["-std=c++11"],
+    defaults: ["avs_common_flags"],
+    name: "alexaClient",
+    tags: ["eng"],
+    static_libs: ["libnghttp2_static"],
+    shared_libs: [
+        "libAlerts",
+        "libAudioResources",
+        "libAVSCommon",
+        "libCBLAuthDelegate",
+        "libCertifiedSender",
+        "libDefaultClient",
+        "libNotifications",
+        "libRegistrationManager",
+        "libAVSSettings",
+        "libSQLiteStorage",
+        "libCapabilitiesDelegate",
+        "libAIP",
+        "libACL",
+        "libPlaylistParser",
+        "libKeywordDetectorProvider",
+        "libAMAZONLITE",
+        "libInteractionModel",
+        "libContextManager",
+        "libPhoneCallController",
+        "libPlaybackController",
+        "libDeviceSettings",
+        "libMeetingClientController",
+        "libAndroidSLESMediaPlayer",
+        "libAndroidUtilities",
+        "liblog",
+    ],
+
+    srcs: [
+        "AvsApp/src/main.cpp",
+        "AvsApp/src/PhoneCaller.cpp",
+        "AvsApp/src/ConsolePrinter.cpp",
+        "AvsApp/src/ConsoleReader.cpp",
+        "AvsApp/src/PlcmAvsApplication.cpp",
+        "AvsApp/src/UserInputManager.cpp",
+        "AvsApp/src/InteractionManager.cpp",
+        "AvsApp/src/ObserverAggregator.cpp",
+        "AvsApp/src/ConnectionObserver.cpp",
+        "AvsApp/src/KeywordObserver.cpp",
+        "AvsApp/src/DummyESPDataProvider.cpp",
+        "AvsApp/src/PolyappIntf.cpp",
+        "AvsApp/src/PlcmEventHandler.cpp",
+        "AvsApp/src/GuiRenderer.cpp",
+        "AvsApp/src/PlcmEqualizerModeController.cpp",
+        "AvsApp/src/MeetingClient.cpp",
+        "AvsApp/src/CalendarClient.cpp",
+        "AvsApp/src/RevokeAuthorizationObserver.cpp"
+    ],
+}
